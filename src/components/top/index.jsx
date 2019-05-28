@@ -9,15 +9,32 @@ class TopSection extends Component {
         super(props);
         this.state = {
           isSelectLocationOpen : false,
-        }
+        };
     }
 
-OnToggleSelectLocation(){
-  this.setState((prevState) =>({isSelectLocationOpen: !prevState.isSelectLocationOpen}))
+onToggleSelectLocation(){
+  this.setState(prevState =>({
+    isSelectLocationOpen: !prevState.isSelectLocationOpen
+  }));
+}
+
+onLocalNameChange(e){
+this.setState({
+  locationName: e.target.value
+});
+}
+
+onSelectCity(){
+  const{ locationName } = this.state;
+  const { eventEmitter } = this.props;
+  eventEmitter.emit("updateweather",locationName);
+  this.setState({ isSelectLocationOpen:false });
 }
 
   render() {
     const { isSelectLocationOpen } = this.state;
+    const { eventEmitter } = this.props;
+
     return (
       <div className = "top-container">
       <div className = "title">Weather Up</div>
@@ -26,7 +43,10 @@ OnToggleSelectLocation(){
       <Manager>
       <Reference>
         {({ ref }) => (
-          <button className = "btn btn-select-location" ref = {ref} onClick = {this.OnToggleSelectLocation.bind(this)}>
+          <button 
+          className = "btn btn-select-location" 
+          ref = {ref} 
+          onClick = {this.OnToggleSelectLocation.bind(this)}>
           Select Location
           </button>
         )}
@@ -36,12 +56,21 @@ OnToggleSelectLocation(){
           isSelectLocationOpen && (
           <div className = "popup-container" 
           ref={ref} 
-          style={{style, top:"-45"}} 
+          style={{style}} 
           data-placement={placement}>
           <div className="form-container">          
            <label htmlFor = "location-name">Location Name</label>
-           <input id="location-name" type="text" placeholder= "City Name" />
-           <button className="btn btn-select-location">Select</button>
+           <input 
+           id="location-name" 
+           type="text" 
+           placeholder= "City Name" 
+           onChange={this.onLocalNameChange.bind(this)}
+           />
+           <button 
+           className="btn btn-select-location" 
+           onClick = {this.onSelectCity.bind(this)}>
+           Select
+           </button>
            </div>
             <div ref={arrowProps.ref} style={ arrowProps.style } />
           </div>

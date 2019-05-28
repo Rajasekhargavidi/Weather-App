@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../bottom/style.scss'
+import forecastday from './forecastday'
 
 export default class BottomSection extends Component {
     constructor(props){
@@ -7,9 +8,14 @@ export default class BottomSection extends Component {
         this.state = {}
     }
   render() {
+    const { forecastdays }= this.props;
     return (
       <div className="bottom-container">
-        Bottom Section
+      <div className="inner-container">
+        {forecastdays && forecastdays.map((day,idx)=>{
+          return <forecastday day={day.day} key={idx}/>
+        })}
+      </div>
       </div>
     );
   }
